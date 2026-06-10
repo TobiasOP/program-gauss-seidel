@@ -1,0 +1,18 @@
+# Mengabaikan folder dependency Node.js
+node_modules/
+
+# Mengabaikan file hasil kompilasi C++ (Windows, Mac, Linux)
+*.exe
+*.out
+*.o
+gauss_seidel
+
+# Mengabaikan file log (jika ada error dari npm)
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Mengabaikan file sistem OS (Mac/Windows)
+.DS_Store
+Thumbs.db

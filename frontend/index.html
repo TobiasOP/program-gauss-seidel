@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Gauss-Seidel</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kalkulator Metode Gauss-Seidel</h1>
+            <p>Penyelesaian Sistem Persamaan Linear</p>
+        </header>
+
+        <main>
+            <section class="setup-section">
+                <h2>1. Pengaturan Matriks</h2>
+                <div class="input-group">
+                    <label for="matrix-size">Ukuran Matriks (n x n):</label>
+                    <input type="number" id="matrix-size" min="2" max="10" value="3">
+                </div>
+                
+                <div class="input-group">
+                    <label for="tolerance">Toleransi Error (ε):</label>
+                    <input type="number" id="tolerance" step="0.0001" value="0.001">
+                </div>
+
+                <div class="input-group">
+                    <label for="max-iter">Maksimal Iterasi:</label>
+                    <input type="number" id="max-iter" min="1" value="50">
+                </div>
+
+                <button id="generate-matrix-btn">Buat Kotak Input Matriks</button>
+            </section>
+
+            <section class="matrix-section" id="matrix-section" style="display: none;">
+                <h2>2. Input Nilai Persamaan</h2>
+                <p>Masukkan koefisien variabel dan nilai konstanta hasil persamaan.</p>
+                
+                <div id="matrix-inputs-container" class="matrix-grid"></div>
+                
+                <button id="calculate-btn">Hitung dengan C++</button>
+            </section>
+
+            <section class="result-section" id="result-section" style="display: none;">
+                <h2>3. Hasil Kalkulasi</h2>
+                
+                <div id="result-output">
+                    </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
