@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="antialiased">
+<html lang="id" class="antialiased dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,15 +12,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class', // Mengaktifkan mode gelap berbasis class HTML
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'], serif: ['Playfair Display', 'serif'] },
                     colors: {
-                        background: 'oklch(0.16 0.005 250)', foreground: 'oklch(0.95 0.005 250)',
-                        card: 'oklch(0.205 0.006 250)', border: 'oklch(0.27 0.006 250)',
-                        primary: 'oklch(0.78 0.2 150)', 'primary-foreground': 'oklch(0.17 0.04 150)',
-                        secondary: 'oklch(0.25 0.006 250)', 'secondary-foreground:': 'oklch(0.95 0.005 250)',
-                        muted: 'oklch(0.25 0.006 250)', 'muted-foreground': 'oklch(0.62 0.01 250)',
+                        background: 'oklch(var(--background) / <alpha-value>)', 
+                        foreground: 'oklch(var(--foreground) / <alpha-value>)',
+                        card: 'oklch(var(--card) / <alpha-value>)', 
+                        border: 'oklch(var(--border) / <alpha-value>)',
+                        primary: 'oklch(var(--primary) / <alpha-value>)', 
+                        'primary-foreground': 'oklch(var(--primary-foreground) / <alpha-value>)',
+                        secondary: 'oklch(var(--secondary) / <alpha-value>)', 
+                        'muted-foreground': 'oklch(var(--muted-foreground) / <alpha-value>)',
                     }
                 }
             }
@@ -30,14 +34,28 @@
 <body class="bg-background text-foreground min-h-screen selection:bg-primary/20 selection:text-primary">
     <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
         
-        <header class="mb-10 text-center">
-            <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-3 py-1 text-xs font-medium text-muted-foreground">
-                <i data-lucide="sparkles" class="h-3.5 w-3.5 text-primary"></i>
-                <span>Kalkulator Numerik</span>
+        <nav class="flex items-center justify-between mb-16">
+            <div class="flex items-center gap-3">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 font-bold text-green-950">G</span>
+                <span class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Numerik · Gauss-Seidel</span>
             </div>
-            <h1 class="font-serif text-4xl font-bold tracking-tight sm:text-5xl text-foreground">
+            <button id="theme-toggle" class="inline-flex items-center gap-2 rounded-full border border-border bg-transparent px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-secondary outline-none">
+                <i data-lucide="sun" class="w-3.5 h-3.5" id="theme-icon"></i>
+                <span id="theme-text">Terang</span>
+            </button>
+        </nav>
+
+        <header class="mb-12 text-left">
+            <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                <i data-lucide="sigma" class="h-3.5 w-3.5 text-primary"></i>
+                <span>Metode Iteratif Komputasi</span>
+            </div>
+            <h1 class="font-serif text-5xl font-bold tracking-tight sm:text-6xl text-foreground">
                 Metode <span class="text-green-500 italic">Gauss-Seidel</span>
             </h1>
+            <p class="mt-5 text-sm text-muted-foreground max-w-xl leading-relaxed">
+                Selesaikan sistem persamaan linear dan cari koefisien polinomial orde 2 melalui pendekatan iteratif. Pilih mode, masukkan datamu, dan lihat konvergensinya.
+            </p>
         </header>
 
         <div class="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-10">
