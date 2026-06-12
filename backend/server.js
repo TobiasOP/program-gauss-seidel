@@ -9,7 +9,7 @@ const port = 3000;
 app.use(express.json());
 
 // Memberitahu server untuk menyajikan file index.html, style.css, script.js
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Endpoint utama tempat script.js mengirim data
 app.post('/calculate', (req, res) => {
@@ -28,7 +28,7 @@ app.post('/calculate', (req, res) => {
 
     // 2. Memanggil program C++ yang sudah dikompilasi
     // Ganti './gauss_seidel' menjadi 'gauss_seidel.exe' jika kamu menggunakan Windows
-    const cppProcess = spawn('./gauss_seidel');
+    const cppProcess = spawn(path.join(__dirname, '../cpp_core/gauss_seidel'));
 
     let outputData = '';
     let errorData = '';

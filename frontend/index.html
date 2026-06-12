@@ -1,58 +1,85 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="antialiased">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Gauss-Seidel</title>
+    <title>Metode Gauss-Seidel · Numerik</title>
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'], serif: ['Playfair Display', 'serif'] },
+                    colors: {
+                        background: 'oklch(0.16 0.005 250)', foreground: 'oklch(0.95 0.005 250)',
+                        card: 'oklch(0.205 0.006 250)', border: 'oklch(0.27 0.006 250)',
+                        primary: 'oklch(0.78 0.2 150)', 'primary-foreground': 'oklch(0.17 0.04 150)',
+                        secondary: 'oklch(0.25 0.006 250)', 'secondary-foreground:': 'oklch(0.95 0.005 250)',
+                        muted: 'oklch(0.25 0.006 250)', 'muted-foreground': 'oklch(0.62 0.01 250)',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Kalkulator Metode Gauss-Seidel</h1>
-            <p>Penyelesaian Sistem Persamaan Linear</p>
+<body class="bg-background text-foreground min-h-screen selection:bg-primary/20 selection:text-primary">
+    <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+        
+        <header class="mb-10 text-center">
+            <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-3 py-1 text-xs font-medium text-muted-foreground">
+                <i data-lucide="sparkles" class="h-3.5 w-3.5 text-primary"></i>
+                <span>Kalkulator Numerik</span>
+            </div>
+            <h1 class="font-serif text-4xl font-bold tracking-tight sm:text-5xl text-foreground">
+                Metode Gauss-Seidel
+            </h1>
         </header>
 
-        <main>
-            <section class="setup-section">
-                <h2>1. Pengaturan Matriks</h2>
-                <div class="input-group">
-                    <label for="matrix-size">Ukuran Matriks (n x n):</label>
-                    <input type="number" id="matrix-size" min="2" max="10" value="3">
+        <section class="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-10">
+            
+            <div class="mb-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div class="flex items-center gap-3">
+                    <label class="text-sm font-semibold text-foreground">Jumlah Variabel (n):</label>
+                    <input type="number" id="matrix-size" value="3" min="2" max="8" class="w-20 rounded-xl border border-border bg-background px-3 py-2.5 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20">
+                </div>
+                <button id="generate-matrix-btn" class="inline-flex items-center gap-2 rounded-xl border border-border bg-secondary px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    Buat Baris Input
+                </button>
+            </div>
+
+            <div class="flex justify-center overflow-x-auto pb-6">
+                <div id="matrix-inputs-container" class="inline-flex flex-col gap-3"></div>
+            </div>
+
+            <div class="mt-6 flex flex-col items-center gap-6 border-t border-border/50 pt-8">
+                <div class="flex items-center gap-3">
+                    <label class="text-sm font-semibold text-foreground">Jumlah Maksimal Iterasi:</label>
+                    <input type="number" id="max-iter" value="50" class="w-24 rounded-xl border border-border bg-background px-3 py-2.5 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20">
                 </div>
                 
-                <div class="input-group">
-                    <label for="tolerance">Toleransi Error (ε):</label>
-                    <input type="number" id="tolerance" step="0.0001" value="0.001">
-                </div>
+                <button id="calculate-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-10 py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
+                    <i data-lucide="calculator" class="w-6 h-6"></i>
+                    Hitung dengan Gauss-Seidel
+                </button>
+            </div>
+        </section>
 
-                <div class="input-group">
-                    <label for="max-iter">Maksimal Iterasi:</label>
-                    <input type="number" id="max-iter" min="1" value="50">
-                </div>
+        <section id="result-section" class="mt-12 hidden">
+            <div class="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                <h2 class="font-serif text-2xl font-bold text-foreground mb-4">Hasil Komputasi</h2>
+                <div id="result-output" class="font-mono text-sm leading-relaxed text-foreground whitespace-pre-wrap bg-background p-5 rounded-xl border border-border"></div>
+            </div>
+        </section>
 
-                <button id="generate-matrix-btn">Buat Kotak Input Matriks</button>
-            </section>
-
-            <section class="matrix-section" id="matrix-section" style="display: none;">
-                <h2>2. Input Nilai Persamaan</h2>
-                <p>Masukkan koefisien variabel dan nilai konstanta hasil persamaan.</p>
-                
-                <div id="matrix-inputs-container" class="matrix-grid"></div>
-                
-                <button id="calculate-btn">Hitung dengan C++</button>
-            </section>
-
-            <section class="result-section" id="result-section" style="display: none;">
-                <h2>3. Hasil Kalkulasi</h2>
-                
-                <div id="result-output">
-                    </div>
-            </section>
-        </main>
     </div>
 
     <script src="script.js"></script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
