@@ -42,31 +42,60 @@
         </header>
 
         <section class="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-10">
-            
-            <div class="mb-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <div class="flex items-center gap-3">
-                    <label class="text-sm font-semibold text-foreground">Jumlah Variabel (n):</label>
-                    <input type="number" id="matrix-size" value="3" min="2" max="8" class="w-20 rounded-xl border border-border bg-background px-3 py-2.5 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20">
-                </div>
-                <button id="generate-matrix-btn" class="inline-flex items-center gap-2 rounded-xl border border-border bg-secondary px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                    Buat Baris Input
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                <button id="tab-spl" class="p-5 rounded-2xl border border-primary/50 bg-primary/5 text-left transition-all opacity-100">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-[10px] font-bold text-primary">01</span>
+                        <span class="text-sm font-bold text-foreground">Input SPL Langsung</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Masukkan koefisien matriks A dan vektor B</p>
+                </button>
+                <button id="tab-poly" class="p-5 rounded-2xl border border-border bg-card text-left transition-all hover:bg-secondary/50 opacity-50">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-green-500/20 text-[10px] font-bold text-green-500">02</span>
+                        <span class="text-sm font-bold text-foreground">Tabel X & Y · Polinomial Orde 2</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Regresi kuadrat dari data terobservasi</p>
                 </button>
             </div>
 
-            <div class="flex justify-center overflow-x-auto pb-6">
-                <div id="matrix-inputs-container" class="inline-flex flex-col gap-3"></div>
+            <div id="spl-container" class="space-y-6">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <label class="text-sm font-semibold text-foreground uppercase tracking-wider text-xs">Jumlah Variabel (n):</label>
+                        <input type="number" id="matrix-size" value="3" min="2" max="8" class="w-20 rounded-full border border-border bg-background px-3 py-2 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20">
+                    </div>
+                    <button id="generate-matrix-btn" class="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-5 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Buat Baris Input
+                    </button>
+                </div>
+                <div class="flex justify-center overflow-x-auto pb-6">
+                    <div id="matrix-inputs-container" class="inline-flex flex-col gap-3"></div>
+                </div>
             </div>
 
-            <div class="mt-6 flex flex-col items-center gap-6 border-t border-border/50 pt-8">
-                <div class="flex items-center gap-3">
-                    <label class="text-sm font-semibold text-foreground">Jumlah Maksimal Iterasi:</label>
-                    <input type="number" id="max-iter" value="50" class="w-24 rounded-xl border border-border bg-background px-3 py-2.5 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20">
+            <div id="poly-container" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row items-center justify-start gap-4">
+                    <div class="flex items-center gap-3">
+                        <label class="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Jumlah Data (N Baris):</label>
+                        <input type="number" id="poly-size" value="3" min="3" class="w-20 rounded-full border border-border bg-background px-3 py-2 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-500/20">
+                    </div>
+                    <button id="generate-poly-btn" class="inline-flex items-center gap-2 rounded-full border border-border bg-transparent px-5 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary">
+                        <i data-lucide="refresh-cw" class="w-4 h-4 text-green-500"></i> Buat Baris Tabel
+                    </button>
+                </div>
+                <div id="poly-inputs-container" class="flex flex-col gap-6 rounded-2xl border border-dashed border-border/70 p-6"></div>
+            </div>
+
+            <div class="mt-8 flex flex-col items-center gap-6 border-t border-border/50 pt-8">
+                <div class="flex flex-col gap-2 items-center">
+                    <label class="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Jumlah Maksimal Iterasi</label>
+                    <input type="number" id="max-iter" value="50" class="w-24 rounded-full border border-border bg-background px-3 py-2 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20">
                 </div>
                 
-                <button id="calculate-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-10 py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
-                    <i data-lucide="calculator" class="w-6 h-6"></i>
-                    Hitung dengan Gauss-Seidel
+                <button id="calculate-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-green-500 px-10 py-4 text-lg font-bold text-white shadow-lg shadow-green-500/20 transition-all hover:bg-green-600 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-green-500/20">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    Hitung dengan Gauss-Seidel <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
                 </button>
             </div>
         </section>
