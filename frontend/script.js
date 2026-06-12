@@ -1,32 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- THEME TOGGLE LOGIC ---
     const themeToggleBtn = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-    const themeText = document.getElementById('theme-text');
     const htmlElement = document.documentElement;
 
     // cek memori browser, apakah sebelumnya user pakai light mode?
     if (localStorage.getItem('theme') === 'light') {
         htmlElement.classList.remove('dark');
-        themeIcon.setAttribute('data-lucide', 'moon');
-        themeText.textContent = 'Gelap';
+    } else {
+        // default dark mode
+        htmlElement.classList.add('dark');
     }
 
     // saat tombol diklik
     themeToggleBtn.addEventListener('click', () => {
-        htmlElement.classList.toggle('dark');
-        const isDark = htmlElement.classList.contains('dark');
+        htmlElement.classList.toggle('dark'); // on/off dark mode
         
-        if (isDark) {
+        // simpan pilihan ke memori browser
+        if (htmlElement.classList.contains('dark')) {
             localStorage.setItem('theme', 'dark');
-            themeIcon.setAttribute('data-lucide', 'sun');
-            themeText.textContent = 'Terang';
         } else {
             localStorage.setItem('theme', 'light');
-            themeIcon.setAttribute('data-lucide', 'moon');
-            themeText.textContent = 'Gelap';
         }
-        lucide.createIcons(); // reload icon
     });
 
     // default state mode
@@ -341,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 } catch (e) {
                     document.getElementById('result-container').innerHTML = `<div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 font-bold">❌ Gagal membaca data dari C++</div>`;
-                }fDOMContentLoaded
+                }
             })
             .catch(err => {
                 document.getElementById('result-container').innerHTML = `<div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 font-bold">❌ Gagal terhubung ke server Node.js.</div>`;

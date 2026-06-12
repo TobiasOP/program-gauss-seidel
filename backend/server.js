@@ -28,6 +28,13 @@ app.post('/calculate', (req, res) => {
     // 2. Memanggil program C++ yang sudah dikompilasi
     const cppProcess = spawn(path.join(__dirname, '../cpp_core/main.exe'));
 
+    cppProcess.on('error', (err) => {
+        console.error('Gagal menjalankan C++:', err);
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Gagal memanggil main.exe. File mungkin hilang atau dihapus Antivirus.' });
+        }
+    });
+
     let outputData = '';
     let errorData = '';
 
