@@ -1,0 +1,201 @@
+/* light mode */
+:root {
+    --background: 0.98 0.005 250;
+    --foreground: 0.15 0.005 250;
+    --card: 1 0 0;
+    --border: 0.9 0.01 250;
+    --primary: 0.65 0.2 150;
+    --primary-foreground: 0.98 0.005 250;
+    --secondary: 0.95 0.006 250;
+    --muted-foreground: 0.45 0.01 250;
+}
+
+/* dark mode */
+html.dark {
+    --background: 0.16 0.005 250;
+    --foreground: 0.95 0.005 250;
+    --card: 0.205 0.006 250;
+    --border: 0.27 0.006 250;
+    --primary: 0.78 0.2 150;
+    --primary-foreground: 0.17 0.04 150;
+    --secondary: 0.25 0.006 250;
+    --muted-foreground: 0.62 0.01 250;
+}
+
+/* --- Reset & Base Styles --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f3f4f6; /* Latar belakang abu-abu sangat muda */
+    color: #1f2937;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* --- Container Utama --- */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Bayangan lembut */
+}
+
+/* --- Bagian Header --- */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* --- Bagian Seksi (Kotak-kotak Pengaturan) --- */
+section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #374151;
+}
+
+/* --- Form & Input --- */
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+input[type="number"] {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    outline: none;
+    font-family: inherit;
+}
+
+/* Efek saat kotak input diklik (Fokus) */
+input[type="number"]:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* --- Tombol --- */
+button {
+    background-color: #111827; /* Hitam khas desain modern */
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #374151;
+}
+
+/* Tombol Hitung pakai warna hijau agar lebih sesuai tema */
+#calculate-btn {
+    background-color: #16a34a; /* Warna hijau */
+    margin-top: 25px;
+}
+
+#calculate-btn:hover {
+    background-color: #15803d; /* Warna hijau lebih gelap saat disorot (hover) */
+}
+
+/* --- Styling Khusus Kotak Matriks --- */
+.matrix-section p {
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+/* Agar input di dalam matriks tidak terlalu lebar */
+.matrix-cell {
+    width: 100% !important; /* Menimpa inline style JS agar menyesuaikan grid CSS */
+    text-align: center;
+    padding: 8px 5px !important;
+}
+
+/* --- Styling Area Hasil --- */
+#result-output {
+    padding: 15px;
+    background-color: #eff6ff; /* Background biru sangat muda */
+    border: 1px dashed #93c5fd;
+    border-radius: 6px;
+    font-family: 'Courier New', Courier, monospace; /* Font coding agar terlihat seperti output sistem */
+    font-size: 1rem;
+    color: #1e3a8a;
+}
+
+:root {
+    --background: 0.98 0.005 250;
+    --foreground: 0.15 0.005 250;
+    --card: 1 0 0;
+    --border: 0.9 0.01 250;
+    --primary: 0.65 0.2 150;
+    --primary-foreground: 0.98 0.005 250;
+    --secondary: 0.95 0.006 250;
+    --muted-foreground: 0.45 0.01 250;
+}
+
+/* Pengaturan Tema Gelap (Dark Mode) */
+html.dark {
+    --background: 0.16 0.005 250;
+    --foreground: 0.95 0.005 250;
+    --card: 0.205 0.006 250;
+    --border: 0.27 0.006 250;
+    --primary: 0.78 0.2 150;
+    --primary-foreground: 0.17 0.04 150;
+    --secondary: 0.25 0.006 250;
+    --muted-foreground: 0.62 0.01 250;
+}
+
+/* Untuk browser Chrome, Safari, Edge, dan Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Untuk browser Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id" class="antialiased dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metode Gauss-Seidel · Numerik</title>
+    <link rel="stylesheet" href="style.css?v=2">    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // mengaktifkan mode gelap berbasis class HTML
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'], serif: ['Playfair Display', 'serif'] },
+                    colors: {
+                        background: 'oklch(var(--background) / <alpha-value>)', 
+                        foreground: 'oklch(var(--foreground) / <alpha-value>)',
+                        card: 'oklch(var(--card) / <alpha-value>)', 
+                        border: 'oklch(var(--border) / <alpha-value>)',
+                        primary: 'oklch(var(--primary) / <alpha-value>)', 
+                        'primary-foreground': 'oklch(var(--primary-foreground) / <alpha-value>)',
+                        secondary: 'oklch(var(--secondary) / <alpha-value>)', 
+                        'muted-foreground': 'oklch(var(--muted-foreground) / <alpha-value>)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-foreground min-h-screen selection:bg-primary/20 selection:text-primary">
+    <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+        
+        <nav class="flex items-center justify-between mb-16 w-full">
+            <div class="flex items-center gap-3">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 font-bold text-green-950">G</span>
+                <span class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Numerik · Gauss-Seidel</span>
+            </div>
+            
+            <button id="theme-toggle" class="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-transparent text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground outline-none" title="Ubah Tema">
+                <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+            </button>
+        </nav>
+
+        <header class="mb-12 text-left">
+            <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                <i data-lucide="sigma" class="h-3.5 w-3.5 text-primary"></i>
+                <span>Metode Iteratif Komputasi</span>
+            </div>
+            <h1 class="font-serif text-5xl font-bold tracking-tight sm:text-6xl text-foreground">
+                Metode <span class="text-green-500 italic">Gauss-Seidel</span>
+            </h1>
+            <p class="mt-5 text-sm text-muted-foreground max-w-xl leading-relaxed">
+                Selesaikan sistem persamaan linear dan cari koefisien polinomial orde 2 melalui pendekatan iteratif. Pilih mode, masukkan datamu, dan lihat konvergensinya.
+            </p>
+        </header>
+
+        <div class="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-10">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                <button id="tab-spl" class="p-5 rounded-2xl border border-green-500/50 bg-green-500/10 text-left transition-all opacity-100">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-green-500/20 text-[10px] font-bold text-green-500">01</span>
+                        <span class="text-sm font-bold text-foreground">Input SPL Langsung</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Masukkan koefisien matriks A dan vektor B</p>
+                </button>
+                
+                <button id="tab-poly" class="p-5 rounded-2xl border border-white/10 bg-white/5 text-left transition-all hover:bg-white/10 opacity-50">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-green-500/20 text-[10px] font-bold text-green-500">02</span>
+                        <span class="text-sm font-bold text-foreground">Tabel X & Y · Polinomial Orde 2</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Regresi kuadrat dari data terobservasi</p>
+                </button>
+            </div>
+
+            <div id="spl-container" class="space-y-6">
+                <div class="flex flex-col items-start gap-2 mb-6">
+                    <label class="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Jumlah Variabel (N)</label>
+                    <div class="flex items-center gap-3">
+                        <input type="number" id="matrix-size" value="3" min="2" max="10" class="w-20 rounded-full border border-border bg-background px-3 py-2 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-500/20">
+                        <button id="generate-matrix-btn" class="inline-flex items-center gap-2 rounded-full border border-green-700 bg-green-800 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-green-700">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Buat Baris Input
+                        </button>
+                    </div>
+                </div>
+                <div id="matrix-inputs-container" class="flex flex-col gap-6 rounded-2xl border border-dashed border-border/70 p-6 overflow-x-auto hidden"></div>
+            </div>
+
+            <div id="poly-container" class="hidden space-y-6">
+                <div class="flex flex-col items-start gap-2 mb-6">
+                    <label class="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Jumlah Data (N Baris)</label>
+                    <div class="flex items-center gap-3">
+                        <input type="number" id="poly-size" value="3" min="3" class="w-20 rounded-full border border-border bg-background px-3 py-2 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-500/20">
+                        <button id="generate-poly-btn" class="inline-flex items-center gap-2 rounded-full border border-green-700 bg-green-800 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-green-700">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Buat Baris Tabel
+                        </button>
+                    </div>
+                </div>
+                <div id="poly-inputs-container" class="flex flex-col gap-6 rounded-2xl border border-dashed border-border/70 p-6"></div>
+            </div>
+
+            <div class="mt-8 flex flex-col items-start gap-6 border-t border-border/50 pt-8">
+                <div class="flex flex-col gap-2 items-start">
+                    <label class="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Jumlah Maksimal Iterasi</label>
+                    <input type="number" id="max-iter" value="3" class="w-20 rounded-full border border-border bg-background px-3 py-2 text-center text-sm font-bold text-foreground outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-500/20">
+                </div>
+                
+                <button id="calculate-btn" class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-green-500 px-10 py-4 text-lg font-bold text-green-950 shadow-lg shadow-green-500/20 transition-all hover:bg-green-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-green-500/20">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    Hitung dengan Gauss-Seidel <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="result-section" class="mt-12 hidden">
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 px-2">
+                <h2 class="font-serif text-3xl font-bold text-foreground">Hasil Komputasi</h2>
+                <div id="result-meta" class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    MODE 01 · SPL · 0 ITERASI
+                </div>
+            </div>
+            <div id="result-container" class="space-y-6"></div>
+        </div>
+
+    </div>
+
+    <script src="script.js?v=3"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
