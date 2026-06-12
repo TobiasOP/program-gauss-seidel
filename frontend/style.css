@@ -106,14 +106,14 @@ button:hover {
     background-color: #374151;
 }
 
-/* Tombol Hitung pakai warna biru agar lebih menonjol */
+/* Tombol Hitung pakai warna hijau agar lebih sesuai tema */
 #calculate-btn {
-    background-color: #2563eb; 
+    background-color: #16a34a; /* Warna hijau */
     margin-top: 25px;
 }
 
 #calculate-btn:hover {
-    background-color: #1d4ed8;
+    background-color: #15803d; /* Warna hijau lebih gelap saat disorot (hover) */
 }
 
 /* --- Styling Khusus Kotak Matriks --- */
@@ -139,4 +139,16 @@ button:hover {
     font-family: 'Courier New', Courier, monospace; /* Font coding agar terlihat seperti output sistem */
     font-size: 1rem;
     color: #1e3a8a;
+}
+
+/* Untuk browser Chrome, Safari, Edge, dan Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Untuk browser Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }

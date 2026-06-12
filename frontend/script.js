@@ -19,24 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
         matrixContainer.innerHTML = '';
         matrixContainer.className = "inline-flex flex-col gap-3";
 
-        // Judul x1, x2, dst di atas tabel
-        const headerRow = document.createElement('div');
-        headerRow.className = "flex items-center gap-3 pr-20";
-
-        for (let i = 0; i < currentMatrixSize; i++) {
-            const th = document.createElement('div');
-            th.className = "w-16 text-center font-mono text-sm font-semibold text-muted-foreground";
-            th.textContent = `x${SUBSCRIPTS[i + 1]}`;
-            headerRow.appendChild(th);
-        }
-        matrixContainer.appendChild(headerRow);
-
+        // Header x1, x2 di atas sudah Dihapus 
         // Baris kotak input
         for (let i = 0; i < currentMatrixSize; i++) {
             const rowWrapper = document.createElement('div');
-            rowWrapper.className = "flex items-center gap-3";
+            // Gap sedikit diperkecil agar tanda + tidak terlalu renggang
+            rowWrapper.className = "flex items-center gap-2"; 
 
             for (let j = 0; j < currentMatrixSize; j++) {
+                // 1. Kotak Input Angka
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.step = 'any';
@@ -44,16 +35,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.placeholder = "0";
                 input.className = "w-16 rounded-lg border border-border bg-background px-3 py-2 text-center font-mono text-sm text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20";
                 rowWrapper.appendChild(input);
+
+                // 2. Teks x1, x2, dst di kanan kotak
+                const label = document.createElement('span');
+                label.className = "font-mono text-sm font-semibold text-muted-foreground";
+                label.textContent = `x${SUBSCRIPTS[j + 1]}`;
+                rowWrapper.appendChild(label);
+
+                // 3. Tambahkan tanda '+' kalau bukan variabel terakhir
+                if (j < currentMatrixSize - 1) {
+                    const plusSign = document.createElement('span');
+                    plusSign.className = "font-mono text-sm font-bold text-muted-foreground mx-1";
+                    plusSign.textContent = "+";
+                    rowWrapper.appendChild(plusSign);
+                }
             }
 
+            // 4. Tanda '='
             const equalsWrapper = document.createElement('div');
-            equalsWrapper.className = "flex w-6 justify-center";
+            equalsWrapper.className = "flex w-4 justify-center mx-1";
             const equalsSpan = document.createElement('span');
             equalsSpan.className = "font-mono text-sm font-bold text-muted-foreground";
             equalsSpan.textContent = "=";
             equalsWrapper.appendChild(equalsSpan);
             rowWrapper.appendChild(equalsWrapper);
 
+            // 5. Kotak Input Hasil Konstanta (Sebelah kanan =)
             const constInput = document.createElement('input');
             constInput.type = 'number';
             constInput.step = 'any';
