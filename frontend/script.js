@@ -179,14 +179,114 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.error) {
-                    resultOutput.innerHTML = `<span class="text-red-400">❌ Error Backend: ${data.error}</span>`;
-                } else {
-                    let preText = currentMode === 'poly' ? "Hasil a₀, a₁, a₂ untuk Y = a₀ + a₁X + a₂X²\n\n" : "";
-                    resultOutput.textContent = preText + data.result;
+                    document.getElementById('result-container').innerHTML = `<div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 font-bold">❌ Error Backend: ${data.error}</div>`;
+                    return;
+                }
+
+                try {
+                    const resultObj = JSON.parse(data.result);
+                    
+                    if (resultObj.error) {
+                        document.getElementById('result-container').innerHTML = `<div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 font-bold">❌ Error: ${resultObj.error}</div>`;
+                        return;
+                    }
+
+                    const varPrefix = currentMode === 'poly' ? 'A' : 'X';
+                    const varPrefixLower = currentMode === 'poly' ? 'a' : 'x';
+                    let html = '';
+
+                    // 1. Box Peringatan Diagonal Dominan
+                    if (!resultObj.isDiagonallyDominant) {
+                        html += `
+                            <div class="flex items-start gap-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4">
+                                <i data-lucide="triangle-alert" class="h-5 w-5 text-yellow-500 shrink-0"></i>
+                                <div>
+                                    <h4 class="text-sm font-bold text-yellow-500">Tidak Dominan Diagonal</h4>
+                                    <p class="text-xs text-yellow-500/80 mt-1">Matriks tidak dominan diagonal. Hasil mungkin divergen atau lambat konvergen.</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // 2. Tabel Iterasi
+                    html += `
+                        <div class="overflow-hidden rounded-2xl border border-border bg-card">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-border/50 text-xs font-bold uppercase tracking-wider text-muted-foreground bg-secondary/20">
+                                            <th class="px-6 py-4 text-left">Iterasi</th>
+                    `;
+                    for(let i=0; i<resultObj.finalSolution.length; i++) {
+                        html += `<th class="px-6 py-4 text-center">${varPrefix}${i + (currentMode==='poly'?0:1)}</th>`;
+                    }
+                    html += `           </tr>
+                                    </thead>
+                                    <tbody class="font-mono text-sm">`;
+
+                    resultObj.iterations.forEach((iterRow, idx) => {
+                        const isLast = idx === resultObj.iterations.length - 1;
+                        const rowClass = isLast ? 'bg-green-500/10 text-green-500 font-bold' : 'border-b border-border/50 text-foreground';
+                        const badgeClass = isLast ? 'bg-green-500 text-white' : 'bg-secondary text-muted-foreground';
+
+                        html += `<tr class="${rowClass} transition-colors">
+                            <td class="px-6 py-4 text-left">
+                                <span class="inline-flex h-6 w-6 items-center justify-center rounded-full ${badgeClass} text-xs font-bold">${idx}</span>
+                            </td>`;
+                        
+                        iterRow.forEach(val => {
+                            html += `<td class="px-6 py-4 text-center">${val.toFixed(2)}</td>`;
+                        });
+                        html += `</tr>`;
+                    });
+
+                    html += `       </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+
+                    // 3. Box Solusi Akhir
+                    html += `
+                        <div class="rounded-2xl border border-border bg-card p-6">
+                            <h4 class="mb-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Solusi Pada Iterasi Akhir</h4>
+                            <div class="flex flex-wrap gap-3 mb-4">
+                    `;
+                    resultObj.finalSolution.forEach((val, i) => {
+                        html += `
+                                <div class="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 shadow-sm">
+                                    <span class="text-xs font-bold text-muted-foreground">${varPrefixLower}${i + (currentMode==='poly'?0:1)}</span>
+                                    <span class="font-mono text-sm font-bold text-foreground">${val.toFixed(2)}</span>
+                                </div>
+                        `;
+                    });
+                    html += `</div>`;
+
+                    if (currentMode === 'poly') {
+                        const a0 = resultObj.finalSolution[0].toFixed(2);
+                        const a1 = resultObj.finalSolution[1].toFixed(2);
+                        const a2 = resultObj.finalSolution[2].toFixed(2);
+                        html += `
+                            <div class="mt-4 border-t border-border/50 pt-4">
+                                <p class="font-mono text-sm text-muted-foreground">
+                                    Polinomial perkiraan: <span class="font-bold text-foreground">y = ${a0} + ${a1}·x + ${a2}·x²</span>
+                                </p>
+                            </div>
+                        `;
+                    }
+                    html += `</div>`;
+
+                    // Masukkan ke HTML dan Perbarui Icon Meta Data
+                    document.getElementById('result-meta').textContent = `MODE ${currentMode==='spl'?'01':'02'} · ${currentMode==='spl'?'SPL':'POLINOMIAL ORDE 2'} · ${resultObj.totalIter} ITERASI`;
+                    document.getElementById('result-container').innerHTML = html;
+                    lucide.createIcons(); // Refresh icons untuk segitiga warning
+
+                } catch (e) {
+                    document.getElementById('result-container').innerHTML = `<div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 font-bold">❌ Gagal membaca data dari C++</div>`;
                 }
             })
             .catch(err => {
-                resultOutput.innerHTML = `<span class="text-red-400">❌ Gagal terhubung ke server Node.js.</span>`;
+                document.getElementById('result-container').innerHTML = `<div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 font-bold">❌ Gagal terhubung ke server Node.js.</div>`;
             });
 
         } catch (error) {

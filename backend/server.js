@@ -28,7 +28,7 @@ app.post('/calculate', (req, res) => {
 
     // 2. Memanggil program C++ yang sudah dikompilasi
     // Ganti './gauss_seidel' menjadi 'gauss_seidel.exe' jika kamu menggunakan Windows
-    const cppProcess = spawn(path.join(__dirname, '../cpp_core/gauss_seidel'));
+    const cppProcess = spawn(path.join(__dirname, '../cpp_core/main.exe'));
 
     let outputData = '';
     let errorData = '';

@@ -101,10 +101,13 @@
         </section>
 
         <section id="result-section" class="mt-12 hidden">
-            <div class="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
-                <h2 class="font-serif text-2xl font-bold text-foreground mb-4">Hasil Komputasi</h2>
-                <div id="result-output" class="font-mono text-sm leading-relaxed text-foreground whitespace-pre-wrap bg-background p-5 rounded-xl border border-border"></div>
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 px-2">
+                <h2 class="font-serif text-3xl font-bold text-foreground">Hasil Komputasi</h2>
+                <div id="result-meta" class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    MODE 01 · SPL · 0 ITERASI
+                </div>
             </div>
+            <div id="result-container" class="space-y-6"></div>
         </section>
 
     </div>
