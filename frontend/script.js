@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const matrixContainer = document.getElementById('matrix-inputs-container');
     const polyInputsContainer = document.getElementById('poly-inputs-container');
     const resultSection = document.getElementById('result-section');
-    resultSection.classList.remove('hidden');
-    document.getElementById('result-container').innerHTML = `<div class="p-6 text-center animate-pulse font-mono text-sm font-bold text-green-500">Memproses komputasi di C++...</div>`;
 
     const SUBSCRIPTS = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
     let currentMatrixSize = 3;
@@ -27,13 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
         splContainer.classList.remove('hidden');
         polyContainer.classList.add('hidden');
         
-        tabSpl.classList.replace('opacity-50', 'opacity-100');
-        tabSpl.classList.add('border-primary/50', 'bg-primary/5');
-        tabSpl.classList.remove('border-border', 'bg-card');
+        // Aktifkan Tombol SPL (Tema Hijau)
+        tabSpl.classList.remove('opacity-50', 'border-white/10', 'bg-white/5', 'hover:bg-white/10');
+        tabSpl.classList.add('opacity-100', 'border-green-500/50', 'bg-green-500/10');
         
-        tabPoly.classList.replace('opacity-100', 'opacity-50');
-        tabPoly.classList.remove('border-green-500/50', 'bg-green-500/5');
-        tabPoly.classList.add('border-border', 'bg-card');
+        // Matikan Tombol Poly (Tema Transparan)
+        tabPoly.classList.remove('opacity-100', 'border-green-500/50', 'bg-green-500/10');
+        tabPoly.classList.add('opacity-50', 'border-white/10', 'bg-white/5', 'hover:bg-white/10');
     });
 
     tabPoly.addEventListener('click', () => {
@@ -41,63 +39,93 @@ document.addEventListener('DOMContentLoaded', () => {
         polyContainer.classList.remove('hidden');
         splContainer.classList.add('hidden');
         
-        tabPoly.classList.replace('opacity-50', 'opacity-100');
-        tabPoly.classList.add('border-green-500/50', 'bg-green-500/5');
-        tabPoly.classList.remove('border-border', 'bg-card');
+        // Aktifkan Tombol Poly (Tema Hijau)
+        tabPoly.classList.remove('opacity-50', 'border-white/10', 'bg-white/5', 'hover:bg-white/10');
+        tabPoly.classList.add('opacity-100', 'border-green-500/50', 'bg-green-500/10');
         
-        tabSpl.classList.replace('opacity-100', 'opacity-50');
-        tabSpl.classList.remove('border-primary/50', 'bg-primary/5');
-        tabSpl.classList.add('border-border', 'bg-card');
+        // Matikan Tombol SPL (Tema Transparan)
+        tabSpl.classList.remove('opacity-100', 'border-green-500/50', 'bg-green-500/10');
+        tabSpl.classList.add('opacity-50', 'border-white/10', 'bg-white/5', 'hover:bg-white/10');
         
         if (polyInputsContainer.innerHTML === '') generatePolyUI();
     });
 
     // --- GENERATE UI SPL LANGSUNG ---
     function generateMatrixUI() {
-        currentMatrixSize = parseInt(document.getElementById('matrix-size').value);
+        currentMatrixSize = parseInt(document.getElementById('matrix-size').value) || 0;
+        
+        // Mencegah error dan menyembunyikan border dashed jika nilai 0
+        if (currentMatrixSize === 0) {
+            matrixContainer.innerHTML = '';
+            matrixContainer.classList.add('hidden');
+            return;
+        }
+
         if (currentMatrixSize < 2 || currentMatrixSize > 10) return alert("Masukkan ukuran matriks antara 2 hingga 10.");
 
         matrixContainer.innerHTML = '';
+        matrixContainer.classList.remove('hidden');
+
         for (let i = 0; i < currentMatrixSize; i++) {
             const rowWrapper = document.createElement('div');
-            rowWrapper.className = "flex items-center gap-2";
+            rowWrapper.className = "flex flex-col sm:flex-row sm:items-center gap-4 border-b border-border/30 pb-4 last:border-0 last:pb-0";
+
+            const rowLabel = document.createElement('span');
+            rowLabel.className = "w-28 shrink-0 text-xs font-bold text-muted-foreground uppercase tracking-widest";
+            rowLabel.textContent = `PERSAMAAN ${i + 1}`;
+            rowWrapper.appendChild(rowLabel);
+
+            const inputsWrapper = document.createElement('div');
+            // CLASS DIBAWAH INI YANG DIUBAH: Dihapus "overflow-x-auto"-nya agar scrollbar hilang
+            inputsWrapper.className = "flex items-center gap-2 flex-nowrap";
 
             for (let j = 0; j < currentMatrixSize; j++) {
                 const input = document.createElement('input');
-                input.type = 'number'; input.step = 'any'; input.id = `cell-${i}-${j}`; input.placeholder = "0";
-                input.className = "w-16 rounded-lg border border-border bg-background px-3 py-2 text-center font-mono text-sm text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20";
-                rowWrapper.appendChild(input);
+                input.type = 'number'; input.step = 'any'; input.id = `cell-${i}-${j}`; 
+                input.placeholder = `0`; 
+                input.className = "w-16 rounded-full border border-border bg-background px-3 py-2 text-center font-mono text-sm text-foreground outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-500/20";
+                inputsWrapper.appendChild(input);
 
                 const label = document.createElement('span');
-                label.className = "font-mono text-sm font-semibold text-muted-foreground";
+                label.className = "font-mono text-sm font-semibold text-muted-foreground shrink-0";
                 label.textContent = `x${SUBSCRIPTS[j + 1]}`;
-                rowWrapper.appendChild(label);
+                inputsWrapper.appendChild(label);
 
                 if (j < currentMatrixSize - 1) {
                     const plusSign = document.createElement('span');
-                    plusSign.className = "font-mono text-sm font-bold text-muted-foreground mx-1";
+                    plusSign.className = "font-mono text-sm font-bold text-muted-foreground mx-1 shrink-0";
                     plusSign.textContent = "+";
-                    rowWrapper.appendChild(plusSign);
+                    inputsWrapper.appendChild(plusSign);
                 }
             }
 
             const equalsSpan = document.createElement('span');
-            equalsSpan.className = "font-mono text-sm font-bold text-muted-foreground mx-2";
+            equalsSpan.className = "font-mono text-sm font-bold text-muted-foreground mx-2 shrink-0";
             equalsSpan.textContent = "=";
-            rowWrapper.appendChild(equalsSpan);
+            inputsWrapper.appendChild(equalsSpan);
 
             const constInput = document.createElement('input');
-            constInput.type = 'number'; constInput.step = 'any'; constInput.id = `cell-${i}-${currentMatrixSize}`; constInput.placeholder = "0";
-            constInput.className = "w-16 rounded-lg border border-primary/50 bg-primary/5 px-3 py-2 text-center font-mono text-sm font-bold text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
-            rowWrapper.appendChild(constInput);
+            constInput.type = 'number'; constInput.step = 'any'; constInput.id = `cell-${i}-${currentMatrixSize}`; 
+            // DIBAWAH INI YANG DIUBAH: Mengembalikan tulisan "Hasil" menjadi "0"
+            constInput.placeholder = "0";
+            constInput.className = "w-20 rounded-full border border-green-500/50 bg-green-500/10 px-3 py-2 text-center font-mono text-sm font-bold text-green-500 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20";
+            inputsWrapper.appendChild(constInput);
 
+            rowWrapper.appendChild(inputsWrapper);
             matrixContainer.appendChild(rowWrapper);
         }
     }
 
     // --- GENERATE UI POLINOMIAL ORDE 2 ---
     function generatePolyUI() {
-        const n = parseInt(document.getElementById('poly-size').value);
+        const n = parseInt(document.getElementById('poly-size').value) || 0;
+        
+        // Mencegah error alert saat nilai 0
+        if (n === 0) {
+            polyInputsContainer.innerHTML = '';
+            return;
+        }
+
         if (n < 3) return alert("Butuh minimal 3 data untuk regresi orde 2.");
 
         polyInputsContainer.innerHTML = '';
@@ -105,15 +133,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const rowDiv = document.createElement('div');
             rowDiv.className = "flex items-center gap-6 border-b border-border/30 pb-4 last:border-0 last:pb-0";
             
+            // Placeholder diganti menjadi angka 0
             rowDiv.innerHTML = `
                 <span class="w-16 text-xs font-bold text-muted-foreground">DATA ${i + 1}</span>
                 <div class="flex items-center gap-3">
                     <span class="text-sm font-mono text-muted-foreground">X</span>
-                    <input type="number" step="any" id="poly-x-${i}" placeholder="x" class="w-24 rounded-full bg-background border border-border px-4 py-2 text-center font-mono text-sm outline-none focus:border-green-500">
+                    <input type="number" step="any" id="poly-x-${i}" placeholder="0" class="w-24 rounded-full bg-background border border-border px-4 py-2 text-center font-mono text-sm outline-none focus:border-green-500">
                 </div>
                 <div class="flex items-center gap-3">
                     <span class="text-sm font-mono text-muted-foreground">Y</span>
-                    <input type="number" step="any" id="poly-y-${i}" placeholder="y" class="w-24 rounded-full bg-background border border-border px-4 py-2 text-center font-mono text-sm outline-none focus:border-green-500">
+                    <input type="number" step="any" id="poly-y-${i}" placeholder="0" class="w-24 rounded-full bg-background border border-border px-4 py-2 text-center font-mono text-sm outline-none focus:border-green-500">
                 </div>
             `;
             polyInputsContainer.appendChild(rowDiv);
@@ -170,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             resultSection.classList.remove('hidden');
-            resultOutput.innerHTML = `<span class="animate-pulse text-green-500">Mengirim data ke C++ Core...</span>`;
+            document.getElementById('result-container').innerHTML = `<div class="p-6 text-center animate-pulse font-mono text-sm font-bold text-green-500">Memproses komputasi di C++...</div>`;
 
             fetch('/calculate', {
                 method: 'POST',
