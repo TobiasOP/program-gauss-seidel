@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const matrixContainer = document.getElementById('matrix-inputs-container');
     const polyInputsContainer = document.getElementById('poly-inputs-container');
     const resultSection = document.getElementById('result-section');
-    const resultOutput = document.getElementById('result-output');
+    resultSection.classList.remove('hidden');
+    document.getElementById('result-container').innerHTML = `<div class="p-6 text-center animate-pulse font-mono text-sm font-bold text-green-500">Memproses komputasi di C++...</div>`;
 
     const SUBSCRIPTS = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
     let currentMatrixSize = 3;
