@@ -17,7 +17,6 @@ app.post('/calculate', (req, res) => {
     const { matrix, constants, tolerance, maxIter } = req.body;
 
     // 1. Mengubah struktur data menjadi teks agar bisa dibaca oleh C++ lewat terminal (stdin)
-    // Format: UkuranMatriks Toleransi MaxIter [IsiMatriks] [IsiKonstanta]
     const n = matrix.length;
     let inputString = `${n} ${tolerance} ${maxIter}\n`;
 
@@ -27,7 +26,6 @@ app.post('/calculate', (req, res) => {
     inputString += constants.join(' ') + '\n';
 
     // 2. Memanggil program C++ yang sudah dikompilasi
-    // Ganti './gauss_seidel' menjadi 'gauss_seidel.exe' jika kamu menggunakan Windows
     const cppProcess = spawn(path.join(__dirname, '../cpp_core/main.exe'));
 
     let outputData = '';
@@ -37,12 +35,12 @@ app.post('/calculate', (req, res) => {
     cppProcess.stdin.write(inputString);
     cppProcess.stdin.end();
 
-    // Menangkap hasil perhitungan (printf/cout) dari C++
+    // Menangkap hasil perhitungan dari C++
     cppProcess.stdout.on('data', (data) => {
         outputData += data.toString();
     });
 
-    // Menangkap pesan eror jika program C++ *crash* atau gagal jalan
+    // Menangkap pesan eror jika program C++ crash
     cppProcess.stderr.on('data', (data) => {
         errorData += data.toString();
     });

@@ -29,7 +29,7 @@ int main() {
         
         if (A[i][i] == 0) {
             cout << "{\"error\": \"Elemen diagonal bernilai 0. Metode Gauss-Seidel divergen.\"}";
-            return 0; // Menggunakan 0 agar node.js tidak error saat menangkap pesan ini
+            return 0; // makai 0 agar node.js ga error saat dapat pesan ini
         }
     }
 
@@ -40,7 +40,7 @@ int main() {
     cout << "\"isDiagonallyDominant\": " << (isDominant ? "true" : "false") << ",";
     cout << "\"iterations\": [";
     
-    // Baris iterasi ke-0 (Tebakan Awal)
+    // iterasi ke-0 (tebakan awal)
     cout << "[";
     for(int i = 0; i < n; i++) cout << X[i] << (i < n - 1 ? "," : "");
     cout << "]";
@@ -61,7 +61,7 @@ int main() {
             X[i] = x_new;
         }
         
-        // Cetak array iterasi
+        // print array iterasi
         cout << ",[";
         for(int i = 0; i < n; i++) cout << X[i] << (i < n - 1 ? "," : "");
         cout << "]";

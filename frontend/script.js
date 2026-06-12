@@ -5,14 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeText = document.getElementById('theme-text');
     const htmlElement = document.documentElement;
 
-    // Cek memori browser, apakah sebelumnya user pakai mode Terang?
+    // cek memori browser, apakah sebelumnya user pakai light mode?
     if (localStorage.getItem('theme') === 'light') {
         htmlElement.classList.remove('dark');
         themeIcon.setAttribute('data-lucide', 'moon');
         themeText.textContent = 'Gelap';
     }
 
-    // Aksi ketika tombol diklik
+    // saat tombol diklik
     themeToggleBtn.addEventListener('click', () => {
         htmlElement.classList.toggle('dark');
         const isDark = htmlElement.classList.contains('dark');
@@ -26,13 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
             themeIcon.setAttribute('data-lucide', 'moon');
             themeText.textContent = 'Gelap';
         }
-        lucide.createIcons(); // Memuat ulang ikon sun/moon
+        lucide.createIcons(); // reload icon
     });
 
-    // Mode State
+    // default state mode
     let currentMode = 'spl'; // 'spl' atau 'poly'
 
-    // Elemen DOM
+    // elemen dom
     const tabSpl = document.getElementById('tab-spl');
     const tabPoly = document.getElementById('tab-poly');
     const splContainer = document.getElementById('spl-container');
@@ -55,11 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         splContainer.classList.remove('hidden');
         polyContainer.classList.add('hidden');
         
-        // Aktifkan Tombol SPL (Tema Hijau)
+        // aktifkan tombol SPL (hijau)
         tabSpl.classList.remove('opacity-50', 'border-white/10', 'bg-white/5', 'hover:bg-white/10');
         tabSpl.classList.add('opacity-100', 'border-green-500/50', 'bg-green-500/10');
         
-        // Matikan Tombol Poly (Tema Transparan)
+        // matikan tombol Poly (transparan)
         tabPoly.classList.remove('opacity-100', 'border-green-500/50', 'bg-green-500/10');
         tabPoly.classList.add('opacity-50', 'border-white/10', 'bg-white/5', 'hover:bg-white/10');
     });
@@ -69,11 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
         polyContainer.classList.remove('hidden');
         splContainer.classList.add('hidden');
         
-        // Aktifkan Tombol Poly (Tema Hijau)
+        // aktifkan tombol Poly (hijau)
         tabPoly.classList.remove('opacity-50', 'border-white/10', 'bg-white/5', 'hover:bg-white/10');
         tabPoly.classList.add('opacity-100', 'border-green-500/50', 'bg-green-500/10');
         
-        // Matikan Tombol SPL (Tema Transparan)
+        // matikan tombol SPL (transparan)
         tabSpl.classList.remove('opacity-100', 'border-green-500/50', 'bg-green-500/10');
         tabSpl.classList.add('opacity-50', 'border-white/10', 'bg-white/5', 'hover:bg-white/10');
         
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function generateMatrixUI() {
         currentMatrixSize = parseInt(document.getElementById('matrix-size').value) || 0;
         
-        // Mencegah error dan menyembunyikan border dashed jika nilai 0
+        // mencegah error dan menyembunyikan border dashed jika nilai 0
         if (currentMatrixSize === 0) {
             matrixContainer.innerHTML = '';
             matrixContainer.classList.add('hidden');
@@ -106,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
             rowWrapper.appendChild(rowLabel);
 
             const inputsWrapper = document.createElement('div');
-            // CLASS DIBAWAH INI YANG DIUBAH: Dihapus "overflow-x-auto"-nya agar scrollbar hilang
             inputsWrapper.className = "flex items-center gap-2 flex-nowrap";
 
             for (let j = 0; j < currentMatrixSize; j++) {
@@ -136,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const constInput = document.createElement('input');
             constInput.type = 'number'; constInput.step = 'any'; constInput.id = `cell-${i}-${currentMatrixSize}`; 
-            // DIBAWAH INI YANG DIUBAH: Mengembalikan tulisan "Hasil" menjadi "0"
             constInput.placeholder = "0";
             constInput.className = "w-20 rounded-full border border-green-500/50 bg-green-500/10 px-3 py-2 text-center font-mono text-sm font-bold text-green-500 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20";
             inputsWrapper.appendChild(constInput);
@@ -150,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function generatePolyUI() {
         const n = parseInt(document.getElementById('poly-size').value) || 0;
         
-        // Mencegah error alert saat nilai 0
+        // mencegah error alert saat nilai 0
         if (n === 0) {
             polyInputsContainer.innerHTML = '';
             return;
@@ -163,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const rowDiv = document.createElement('div');
             rowDiv.className = "flex items-center gap-6 border-b border-border/30 pb-4 last:border-0 last:pb-0";
             
-            // Placeholder diganti menjadi angka 0
+            // placeholder diganti menjadi angka 0
             rowDiv.innerHTML = `
                 <span class="w-16 text-xs font-bold text-muted-foreground">DATA ${i + 1}</span>
                 <div class="flex items-center gap-3">
@@ -179,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Inisialisasi awal
+    // inisialisasi awal
     generateMatrixUI();
     generateMatrixBtn.addEventListener('click', generateMatrixUI);
     generatePolyBtn.addEventListener('click', generatePolyUI);
@@ -194,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             if (currentMode === 'spl') {
-                // Kumpulkan data matriks biasa
+                // kumpulkan data matriks biasa
                 for (let i = 0; i < currentMatrixSize; i++) {
                     const row = [];
                     for (let j = 0; j <= currentMatrixSize; j++) {
@@ -205,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     matrixData.push(row);
                 }
             } else if (currentMode === 'poly') {
-                // Kalkulasi Matriks Regresi Polinomial (Least Squares)
+                // hitung matriks regresi polinomial
                 const n = parseInt(document.getElementById('poly-size').value);
                 let sX = 0, sX2 = 0, sX3 = 0, sX4 = 0;
                 let sY = 0, sXY = 0, sX2Y = 0;
@@ -218,13 +216,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     sY += y; sXY += x*y; sX2Y += Math.pow(x, 2) * y;
                 }
 
-                // Membentuk Matriks A (3x3)
+                // buat matriks A
                 matrixData = [
                     [n, sX, sX2],
                     [sX, sX2, sX3],
                     [sX2, sX3, sX4]
                 ];
-                // Membentuk Vektor B
+                // buat vektor B
                 constantsData = [sY, sXY, sX2Y];
             }
 
@@ -336,10 +334,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     html += `</div>`;
 
-                    // Masukkan ke HTML dan Perbarui Icon Meta Data
+                    // masukan ke HTML dan perbauri icon
                     document.getElementById('result-meta').textContent = `MODE ${currentMode==='spl'?'01':'02'} · ${currentMode==='spl'?'SPL':'POLINOMIAL ORDE 2'} · ${resultObj.totalIter} ITERASI`;
                     document.getElementById('result-container').innerHTML = html;
-                    lucide.createIcons(); // Refresh icons untuk segitiga warning
+                    lucide.createIcons(); // refresh icon untuk segitiga warning
 
                 } catch (e) {
                     document.getElementById('result-container').innerHTML = `<div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 font-bold">❌ Gagal membaca data dari C++</div>`;

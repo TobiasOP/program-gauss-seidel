@@ -1,4 +1,4 @@
-/* Pengaturan Tema Terang (Light Mode) */
+/* light mode */
 :root {
     --background: 0.98 0.005 250;
     --foreground: 0.15 0.005 250;
@@ -10,7 +10,7 @@
     --muted-foreground: 0.45 0.01 250;
 }
 
-/* Pengaturan Tema Gelap (Dark Mode) */
+/* dark mode */
 html.dark {
     --background: 0.16 0.005 250;
     --foreground: 0.95 0.005 250;
@@ -70,7 +70,7 @@ header p {
 section {
     margin-bottom: 25px;
     padding: 20px;
-    background-color: #f9fafb; /* Sedikit beda dari putih container */
+    background-color: #f9fafb;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
 }
